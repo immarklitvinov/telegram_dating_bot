@@ -32,15 +32,18 @@ profile = []
 6 - photo
 '''
 
-possible_interests = ['стройка', 'тик-ток', 'игры', 'шахматы', 'работа', 'тусовки', 'языки', 'рисование', 'бизнес', 'питомцы', 'аниме', 'программирование', 'путешествия', 'общение', 'море', 'музыка', 'фотография', 'концерты', 'торговля', 'автомобили', 'отдых', 'дизайн', 'спорт', 'литература', 'ютуб', 'маркетинг', 'экономика', 'видеоблог', 'танцы', 'стартапы', 'театр', 'дети', '!continue!']
+basic_interests = ['стройка', 'тик-ток', 'игры', 'шахматы', 'работа', 'тусовки', 'языки', 'рисование', 'бизнес', 'питомцы', 'аниме', 'программирование', 'путешествия', 'общение', 'море', 'музыка', 'фотография', 'концерты', 'торговля', 'автомобили', 'отдых', 'дизайн', 'спорт', 'литература', 'ютуб', 'маркетинг', 'экономика', 'видеоблог', 'танцы', 'стартапы', 'театр', 'дети', '!continue!']
+possible_interests = basic_interests.copy()
 user_interests = []
 
-markup_interests = types.ReplyKeyboardMarkup(resize_keyboard=True)
-def edit_markup():
+markup_interests = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard = True)
+def update_markup():
     global markup_interests
+    markup_interests = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard = True)
+    global possible_interests
+    global user_interests
     for elem in possible_interests:
         markup_interests.add(types.KeyboardButton(elem))
-
 
 @bot.message_handler(commands=['start'])
 def welcome_command(message):
@@ -56,6 +59,9 @@ def help_command(message):
 @bot.message_handler(content_types=['text'])
 def reply_to_message(message):
     global var_mode
+    global possible_interests
+    global user_interests
+    global markup_interests
     if message.chat.type == 'private':
 
         # creating profile
@@ -71,11 +77,20 @@ def reply_to_message(message):
             elif var_mode[1] == 3:
                 profile.append(message.text) # age
                 var_mode[1] = 4
-                edit_markup()
+                update_markup()
                 bot.send_message(message.chat.id, 'What are your interests? Choose', reply_markup = markup_interests)
-            elif var_mode[1] == 4 and message.text != '!дальше!':
+            elif var_mode[1] == 4 and message.text != '!дальше!' and message.text in possible_interests:
                 user_interests.append(message.text)
+                possible_interests.remove(message.text)
+                user_interests.append(message.text)
+                update_markup()
                 bot.send_message(message.chat.id, 'Added! Anything else? To continue press !continue! button at the bottom.', reply_markup = markup_interests)
+            elif var_mode[1] == 4 and message.text == '!дальше!':
+                bot.send_message(message.chat.id, 'You wished to continue', reply_markup = None)
+            else:
+                bot.send_message(message.chat.id, 'Returning you to main menu', reply_markup = None)
+                var_mode[0] = 'main_menu'
+                var_mode[1] = 0
 
         elif message.text == 'My profile':
             bot.send_message(message.chat.id, 'Choose the required option', reply_markup = markup_profile)
@@ -85,18 +100,5 @@ def reply_to_message(message):
             var_mode[1] = 1
         else:
             bot.send_message(message.chat.id, 'Message recieved!')
-
-'''
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-	bot.send_message(message.chat.id, 'Message recieved!')
-
-def create_profile(chat_id):
-
-    bot.send_message(chat_id, "What city do you live in?")
-    @bot.message_handler(content_types=['text'])
-    def user_city(message):
-        pass
-'''
 
 bot.polling()
