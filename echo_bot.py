@@ -6,7 +6,7 @@ bot = telebot.TeleBot(config.TOKEN)
 bot_me = bot.get_me()
 
 # dict of profiles
-people = {'@example_id': ['Moscow', 'Ivan', '18', 'Self info']}
+people = {'@example_id': ['id', 'Ivan', 'Moscow', '18', 'interests', 'description', 'photo']}
 
 markup_main = types.ReplyKeyboardMarkup(resize_keyboard=True)
 item1_main = types.KeyboardButton("My profile")
@@ -17,6 +17,28 @@ markup_profile = types.ReplyKeyboardMarkup(resize_keyboard=True)
 item1_profile = types.KeyboardButton("Create new one")
 item2_profile = types.KeyboardButton("Edit already existing")
 markup_profile.add(item1_profile, item2_profile)
+markup_profile.add(item1_profile, item2_profile)
+
+
+var_mode = ['main_menu', 0]
+profile = []
+
+'''
+
+1 - name
+2 - city
+3 - age
+4 - interests
+5 - description
+6 - photo
+'''
+
+interests = ['стройка', 'тик-ток', 'игры', 'шахматы', 'работа', 'тусовки', 'языки', 'рисование', 'бизнес', 'питомцы', 'аниме', 'программирование', 'путешествия', 'общение', 'море', 'музыка', 'фотография', 'концерты', 'торговля', 'автомобили', 'отдых', 'дизайн', 'спорт', 'литература', 'ютуб', 'маркетинг', 'экономика', 'видеоблог', 'танцы', 'стартапы', 'театр', 'дети']
+
+markup_interests = types.ReplyKeyboardMarkup(resize_keyboard=True)
+def edit_markup():
+    global markup_interests
+
 
 
 
@@ -30,14 +52,45 @@ def welcome_command(message):
 def help_command(message):
     bot.send_message(message.chat.id, '/start - Begins the dialog\n/help - Shares info about bot\n/profile - Create your profile')
 
-@bot.message_handler(commands=['My profile'])
-def create_profile(message):
-    bot.send_message(message.chat.id, 'Choose the required option')
 
+@bot.message_handler(content_types=['text'])
+def reply_to_message(message):
+    global var_mode
+    if message.chat.type == 'private':
+
+        # creating profile
+        if var_mode[0] == 'creating_profile':
+            if var_mode[1] == 1:
+                profile.append(message.text) # name
+                var_mode[1] = 2
+                bot.send_message(message.chat.id, 'What city do you live in?', reply_markup = types.ReplyKeyboardRemove()))
+            elif var_mode[1] == 2:
+                profile.append(message.text) # city
+                var_mode[1] = 3
+                bot.send_message(message.chat.id, 'How old are you?', reply_markup = types.ReplyKeyboardRemove()))
+            elif var_mode[1] == 3:
+                profile.append(message.text) # age
+                var_mode[1] = 4
+                bot.send_message(message.chat.id, 'How old are you?', reply_markup = types.ReplyKeyboardRemove()))
+            elif var_mode[1] == 4:
+                #interests
+                var_mode[0] = 'main_menu'
+                var_mode[1] = 0
+                pass
+
+        elif message.text == 'My profile':
+            bot.send_message(message.chat.id, 'Choose the required option', reply_markup = markup_profile)
+        elif message.text == 'Create new one':
+            bot.send_message(message.chat.id, 'What is your name?', reply_markup = types.ReplyKeyboardRemove())
+            var_mode[0] = 'creating_profile'
+            var_mode[1] = 1
+        else:
+            bot.send_message(message.chat.id, 'Message recieved!')
+
+'''
 @bot.message_handler(func=lambda message: True)
 def echo_all(message):
 	bot.send_message(message.chat.id, 'Message recieved!')
-
 
 def create_profile(chat_id):
 
@@ -45,5 +98,6 @@ def create_profile(chat_id):
     @bot.message_handler(content_types=['text'])
     def user_city(message):
         pass
+'''
 
 bot.polling()
