@@ -17,7 +17,6 @@ markup_profile = types.ReplyKeyboardMarkup(resize_keyboard=True)
 item1_profile = types.KeyboardButton("Create new one")
 item2_profile = types.KeyboardButton("Edit already existing")
 markup_profile.add(item1_profile, item2_profile)
-markup_profile.add(item1_profile, item2_profile)
 
 
 var_mode = ['main_menu', 0]
@@ -33,13 +32,14 @@ profile = []
 6 - photo
 '''
 
-interests = ['стройка', 'тик-ток', 'игры', 'шахматы', 'работа', 'тусовки', 'языки', 'рисование', 'бизнес', 'питомцы', 'аниме', 'программирование', 'путешествия', 'общение', 'море', 'музыка', 'фотография', 'концерты', 'торговля', 'автомобили', 'отдых', 'дизайн', 'спорт', 'литература', 'ютуб', 'маркетинг', 'экономика', 'видеоблог', 'танцы', 'стартапы', 'театр', 'дети']
+possible_interests = ['стройка', 'тик-ток', 'игры', 'шахматы', 'работа', 'тусовки', 'языки', 'рисование', 'бизнес', 'питомцы', 'аниме', 'программирование', 'путешествия', 'общение', 'море', 'музыка', 'фотография', 'концерты', 'торговля', 'автомобили', 'отдых', 'дизайн', 'спорт', 'литература', 'ютуб', 'маркетинг', 'экономика', 'видеоблог', 'танцы', 'стартапы', 'театр', 'дети', '!continue!']
+user_interests = []
 
 markup_interests = types.ReplyKeyboardMarkup(resize_keyboard=True)
 def edit_markup():
     global markup_interests
-
-
+    for elem in possible_interests:
+        markup_interests.add(types.KeyboardButton(elem))
 
 
 @bot.message_handler(commands=['start'])
@@ -63,20 +63,19 @@ def reply_to_message(message):
             if var_mode[1] == 1:
                 profile.append(message.text) # name
                 var_mode[1] = 2
-                bot.send_message(message.chat.id, 'What city do you live in?', reply_markup = types.ReplyKeyboardRemove()))
+                bot.send_message(message.chat.id, 'What city do you live in?', reply_markup = types.ReplyKeyboardRemove())
             elif var_mode[1] == 2:
                 profile.append(message.text) # city
                 var_mode[1] = 3
-                bot.send_message(message.chat.id, 'How old are you?', reply_markup = types.ReplyKeyboardRemove()))
+                bot.send_message(message.chat.id, 'How old are you?', reply_markup = types.ReplyKeyboardRemove())
             elif var_mode[1] == 3:
                 profile.append(message.text) # age
                 var_mode[1] = 4
-                bot.send_message(message.chat.id, 'How old are you?', reply_markup = types.ReplyKeyboardRemove()))
-            elif var_mode[1] == 4:
-                #interests
-                var_mode[0] = 'main_menu'
-                var_mode[1] = 0
-                pass
+                edit_markup()
+                bot.send_message(message.chat.id, 'What are your interests? Choose', reply_markup = markup_interests)
+            elif var_mode[1] == 4 and message.text != '!дальше!':
+                user_interests.append(message.text)
+                bot.send_message(message.chat.id, 'Added! Anything else? To continue press !continue! button at the bottom.', reply_markup = markup_interests)
 
         elif message.text == 'My profile':
             bot.send_message(message.chat.id, 'Choose the required option', reply_markup = markup_profile)
