@@ -1,0 +1,8 @@
+cursor.execute("SELECT column1 FROM my_table")
+
+cursor.execute("INSERT INTO table_name (column1, column2, column3, ...)
+VALUES (value1, value2, value3, ...")
+
+cursor.execute("UPDATE table_name
+  SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+  WHERE CustomerID = 1;")
