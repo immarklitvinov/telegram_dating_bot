@@ -191,3 +191,4 @@ Creating tgbot by time. 25th hour:
 Creating tgbot by time. 26th hour:
 
 46 - beginning the creation of explore page
+40 - commited latest version before creation of explore page
