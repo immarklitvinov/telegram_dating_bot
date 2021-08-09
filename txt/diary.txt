@@ -153,3 +153,41 @@
 0 - разобрался с менюшкой interests
 0 - багофикс
 -10 - сделал, все переделано, наконец-то, прекрасно!! Комиччу и на сегодня еще часик посижу, попробую сделать edit чтоб потом не возиться с этим делом
+
+
+Создание тг бота по времени. 21-ый час:
+
+59 - начинаю делать profile edit
+12 - продумал структуру и начал редактировать, сделал редактирование имени
+1 - делаю if'ы
+
+
+Создание тг бота по времени 22-ой час:
+
+59 - пишу условные конструкции для редактирования профиля
+40 - норм написал, только для чисел фоток и интересов отдельно, поехали фиксить это
+2 - сделал обновление пола юху сейчас возраст
+
+
+Создание тг бота по времени 23-ий час:
+
+28 - it is only left to debug my changes panel
+2 - looking for buggs connected with wrong indexation fo arrays lmao
+
+
+Creating tgbot by time. 24th hour:
+
+20 - I have debugged the code, now making everything nice
+0 - debugged, sent current version to Mathew and George, they said it's okay.
+
+
+Creating tgbot by time. 25th hour:
+
+59 - from that time I begin to create explore page and the whole system of finding people
+55 - inventing vip-features
+25 - came up with idea of searching people with their location - it's genious!!
+
+
+Creating tgbot by time. 26th hour:
+
+46 - beginning the creation of explore page

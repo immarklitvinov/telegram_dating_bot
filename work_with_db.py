@@ -15,5 +15,10 @@ cursor = connection.cursor()
 #print(list(cursor.execute("SELECT * FROM users")))
 #print(cursor.execute(f"SELECT * FROM users WHERE id == 403500796").fetchone())
 
-for row in cursor.execute('SELECT * FROM users'):
-        print(row)
+#for row in cursor.execute('SELECT * FROM users'):
+#        print(row)
+
+cursor.execute("DELETE FROM users WHERE id == 403500796")
+
+connection.commit()
+connection.close()
