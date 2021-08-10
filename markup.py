@@ -49,10 +49,19 @@ for elem in editable_settings:
     edit_profile.add(types.KeyboardButton(elem))
 edit_profile.add(item1_main)
 
-explore_page = types.ReplyKeyboardMarkup(resize_keyboard = True)
-item1_explore_page = types.KeyboardButton('Explore new')
-item2_explore_page = types.KeyboardButton('Search filters')
-explore_page.add(item1_explore_page, item2_explore_page, item1_back_to_main)
+explore_menu = types.ReplyKeyboardMarkup(resize_keyboard = True)
+item1_explore_menu = types.KeyboardButton('Explore new')
+item2_explore_menu = types.KeyboardButton('Search filters')
+explore_menu.add(item1_explore_menu, item2_explore_menu, item1_back_to_main)
+
+explore = types.ReplyKeyboardMarkup(resize_keyboard = True)
+item1_explore = types.KeyboardButton(text = emoji.emojize(':heart_on_fire::heart_on_fire:'))
+item2_explore = types.KeyboardButton(emoji.emojize(':heart_with_arrow::bell_with_slash:'))
+item3_explore = types.KeyboardButton(emoji.emojize(':love_letter::love_letter:'))
+item4_explore = types.KeyboardButton(emoji.emojize(':thumbs_down::see-no-evil_monkey:'))
+item1_back_to_explore_menu = types.KeyboardButton('Back to menu')
+explore.row(item1_explore, item2_explore, item3_explore, item4_explore, item1_back_to_explore_menu)
+
 
 # special markup when user picks up interests
 def create_interests(interests):

@@ -192,3 +192,33 @@ Creating tgbot by time. 26th hour:
 
 46 - beginning the creation of explore page
 40 - commited latest version before creation of explore page
+40 - derived a formula of distance between two points on sphere
+0 - created 10 users
+
+
+Creating tgbot by time. 27th hour:
+
+40 - fixed bugs from previous markup update and now creating new 10 profiles and making basic explore
+1 - profiles created successfully. now making query and basic search
+
+
+Creating tgbot by time. 27th hour:
+
+16 - counting the proper size of query
+2 - math is done, now back to practice
+
+
+Creating tgbot by time. 28th hour:
+
+58 - creating explore markup
+0 - created markup and debuged
+
+
+Creating tgbot by time.
+
+0 - packing explore buttons into one and only container
+16 - creating query
+1:07 - invented the whole struct of db
+1:58 - found out that there's json library in python and it's not a problem at all now to have query storaged
+2:39 - created all necessary fields for my database: table explore_settings and additional columns in users
+3:13 - adding info to old and new db works, now I commit changes and end up for today. feels like im closer

@@ -5,6 +5,7 @@ import emoji
 import random
 import sqlite3
 import markup
+import json
 from markup import create_interests
 from telebot import types
 
@@ -35,16 +36,39 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS users (
     mode_text text,
     mode_num integer,
     profile_created integer,
-    username text
+    username text,
+    chat_id integer
+    )""")
+
+cursor.execute("""CREATE TABLE IF NOT EXISTS explore_settings (
+    id integer,
+    chat_id integer,
+    username text,
+    liked_times integer,
+    age_min integer,
+    age_max integer,
+    sex text,
+    interest text,
+    account_status text,
+    longtitude real,
+    latitude real,
+    report_status text,
+    reports_amount integer,
+    profile_views integer,
+    profiles_seen integer,
+    activity_status text,
+    query text
     )""")
 
 connection.commit()
 connection.close()
 
 # gloval variables
-keys = ['id', 'name', 'sex', 'age', 'city', 'description', 'photo', 'interests', 'mode_text', 'mode_num', 'profile_created', 'username']
+users_keys = ['id', 'name', 'sex', 'age', 'city', 'description', 'photo', 'interests', 'mode_text', 'mode_num', 'profile_created', 'username', 'chat_id']
+explore_settings_keys = ['id', 'chat_id', 'username', 'liked_times', 'age_min', 'age_max', 'sex', 'interest', 'account_status', 'longtitude', 'latitude', 'report_status', 'reports_amount', 'profile_views', 'profiles_seen', 'activity_status', 'query']
 basic_interests = ['стройка', 'тик-ток', 'игры', 'шахматы', 'работа', 'тусовки', 'языки', 'рисование', 'бизнес', 'питомцы', 'аниме', 'программирование', 'путешествия', 'общение', 'море', 'музыка', 'фотография', 'концерты', 'торговля', 'автомобили', 'отдых', 'дизайн', 'спорт', 'литература', 'ютуб', 'маркетинг', 'экономика', 'видеоблог', 'танцы', 'стартапы', 'театр', 'дети']
 editable_settings = ['Name', 'Age', 'City', 'Sex', 'Description', 'Interests', 'Photo']
+
 
 # save photo
 def photo_download(cursor, user, message):
@@ -65,8 +89,8 @@ def my_profile(chat_id, user):
 
 # most important function to get user data from db
 def get_data(cursor, user_id):
-    global keys
-    return dict(zip(keys, cursor.execute(f"SELECT * FROM users WHERE id == {user_id}").fetchone()))
+    global users_keys
+    return dict(zip(users_keys, cursor.execute(f"SELECT * FROM users WHERE id == {user_id}").fetchone()))
 
 
 def back_to_main_menu(cursor, user, message):
@@ -78,7 +102,12 @@ def back_to_edit_profile_menu(cursor, user, message):
     bot.send_message(message.chat.id, 'Edit profile menu', reply_markup = markup.edit_profile)
 
 def create_user(cursor, message):
-    cursor.execute(f"INSERT INTO users VALUES ({message.from_user.id},'','','','','','','','main_menu',0,0,{message.from_user.username})")
+    cursor.execute(f"INSERT INTO users VALUES ({message.from_user.id},'','','','','','','','main_menu',0,0,'{message.from_user.username}',{message.chat.id})")
+
+def create_explore_settings(cursor, message):
+    cursor.execute(f"INSERT INTO explore_settings VALUES ({message.from_user.id}, {message.chat.id}, '{message.from_user.username}', 0, 0, 0, '', '', 'basic', 0, 0, 'clear', 0, 0, 0, 'on', '')")
+    cursor.execute(f"UPDATE users SET profile_created = 2 WHERE id == {message.from_user.id}")
+
 
 
 # handlers
@@ -92,7 +121,8 @@ def welcome_command(message):
 
     bot.send_message(message.chat.id, f"Welcome, {message.from_user.first_name} {message.from_user.last_name}!\nI am the bot, created for you to meet new people.\nFirst you need to create your profile in <Profile settings> button, then you will be able to explore others.\nSend /help to get full list of commands", reply_markup = markup.main)
     if(message.from_user.id not in list(cursor.execute("SELECT id FROM users"))):
-        create_user(cursor, username)
+        create_user(cursor, message)
+    cursor.execute(f"UPDATE users SET mode_text = 'main_menu' WHERE id = {message.from_user.id}")
 
     connection.commit()
     connection.close()
@@ -115,7 +145,7 @@ def reply_to_message(message):
 
         # creating profile
         if message.from_user.id not in list(cursor.execute("SELECT id FROM users")):
-            cursor.execute(f"INSERT INTO users VALUES ({message.from_user.id},'','','','','','','','main_menu',0,0)")
+            create_user(cursor, message)
             bot.send_message(message.chat.id, 'Hello! Start chatting with creating your profile in settings.', reply_markup = markup.main)
 
         user = get_data(cursor, user_id)
@@ -136,11 +166,11 @@ def reply_to_message(message):
                 bot.send_message(message.chat.id, 'How old are you?', reply_markup = markup.back_to_settings)
             elif user['mode_num'] == 4 and message.text != 'Back to main menu':
                 cursor.execute(f"UPDATE users SET age = '{message.text}', mode_num = 5 WHERE id = {user_id};") # age
-                bot.send_message(message.chat.id, emoji.emojize('Choose your interest. To end press continue:fast-forward_button: button at the bottom.'), reply_markup = create_markup.interests(user['interests']))
+                bot.send_message(message.chat.id, emoji.emojize('Choose your interest. To end press continue:fast-forward_button: button at the bottom.'), reply_markup = create_interests(user['interests']))
             elif user['mode_num'] == 5 and ('continue' not in message.text) and message.text in (set(basic_interests) - set(user['interests'].split())) and message.text != 'Back to main menu':
                 cursor.execute(f"UPDATE users SET interests = '{user['interests'] + ' '  + message.text}', mode_num = 5 WHERE id = {user_id};") # append interests 1 by 1
                 user = get_data(cursor, user_id)
-                bot.send_message(message.chat.id, emoji.emojize('Added! Anything else? To end press continue:fast-forward_button: button at the bottom.'), reply_markup = create_markup.interests(user['interests']))
+                bot.send_message(message.chat.id, emoji.emojize('Added! Anything else? To end press continue:fast-forward_button: button at the bottom.'), reply_markup = create_interests(user['interests']))
             elif user['mode_num'] == 5 and 'continue' in message.text and message.text != 'Back to main menu':
                 cursor.execute(f"UPDATE users SET mode_num = 6 WHERE id = {user_id};")
                 bot.send_message(message.chat.id, 'Write something about yourself here', reply_markup = markup.back_to_settings)
@@ -159,14 +189,14 @@ def reply_to_message(message):
                 bot.send_message(message.chat.id, "This is your profile now", reply_markup = markup.edit)
                 my_profile(message.chat.id, user)
 
-        elif message.text == 'Edit profile' and user['profile_created'] == 1:
+        elif message.text == 'Edit profile' and user['profile_created'] > 0:
             bot.send_message(message.chat.id, 'Choose what you want to edit.', reply_markup = markup.edit_profile)
             cursor.execute(f"UPDATE users SET mode_text = 'profile_editing', mode_num = 0 WHERE id = {user_id}")
 
         elif user['mode_text'] == 'profile_editing' and user['mode_num'] == 0 and message.text in editable_settings:
             if message.text == 'Interests':
                 cursor.execute(f"UPDATE users SET interests = '' WHERE id = {user_id};")
-                bot.send_message(message.chat.id, emoji.emojize('Choose your interest. To end press continue:fast-forward_button: button at the bottom.'), reply_markup = create_markup.interests(''))
+                bot.send_message(message.chat.id, emoji.emojize('Choose your interest. To end press continue:fast-forward_button: button at the bottom.'), reply_markup = create_interests(''))
             elif message.text == 'Sex':
                 bot.send_message(message.chat.id, f"Enter the new {message.text.lower()}", reply_markup = markup.sex_edit)
             elif message.text == 'Photo':
@@ -181,7 +211,7 @@ def reply_to_message(message):
                 if ('continue' not in message.text) and message.text in (set(basic_interests) - set(user['interests'].split())):
                     cursor.execute(f"UPDATE users SET interests = '{user['interests'] + ' '  + message.text}' WHERE id = {user_id};") # append interests 1 by 1
                     user = get_data(cursor, user_id)
-                    bot.send_message(message.chat.id, emoji.emojize('Added! Anything else? To end press continue:fast-forward_button: button at the bottom.'), reply_markup = create_markup.interests(user['interests']))
+                    bot.send_message(message.chat.id, emoji.emojize('Added! Anything else? To end press continue:fast-forward_button: button at the bottom.'), reply_markup = create_interests(user['interests']))
                 elif user['mode_num'] == editable_settings.index('Interests') + 1 and 'continue' in message.text and message.text != 'Back to main menu':
                     bot.send_message(message.chat.id, 'Your interests field is updated. This is your profile now.', reply_markup = markup.edit)
                     cursor.execute(f"UPDATE users SET mode_num = 0 WHERE id = {user_id}")
@@ -213,10 +243,19 @@ def reply_to_message(message):
             cursor.execute(f"UPDATE users SET mode_text = 'creating_profile', mode_num = 1 WHERE id = {user_id};")
             bot.send_message(message.chat.id, 'What is your name?', reply_markup = markup.back_to_settings)
 
+        elif message.text == 'Explore' and user['mode_text'] == 'main_menu' and user['profile_created'] > 0:
+            bot.send_message(message.chat.id, 'Explore page', reply_markup = markup.explore_menu)
+            cursor.execute(f"UPDATE users SET mode_text = 'explore_menu' WHERE id = {user_id}")
+            if user['profile_created'] == 1:
+                create_explore_settings(cursor, message)
 
-        elif message.text == 'Explore' and user['mode_text'] == 'main_menu':
-            bot.send_message(message.chat.id, 'Explore page', reply_markup = markup.explore_page)
+        elif message.text == 'Explore new' and user['mode_text'] == 'explore_menu' and user['profile_created'] > 0:
+            bot.send_message(message.chat.id, 'New ankets for you', reply_markup = markup.explore)
+            cursor.execute(f"UPDATE users SET mode_text = 'explore' WHERE id = {user_id}")
 
+        elif message.text == 'Back to menu' and user['mode_text'] == 'explore':
+            bot.send_message(message.chat.id, 'Explore menu', reply_markup = markup.explore_menu)
+            cursor.execute(f"UPDATE users SET mode_text = 'explore_menu' WHERE id = {user_id}")
 
         elif message.text == 'Back to main menu':
             back_to_main_menu(cursor, user, message)
