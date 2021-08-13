@@ -44,20 +44,27 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS explore_settings (
     id integer,
     chat_id integer,
     username text,
-    liked_times integer,
+    likes_got_counter integer,
+    account_status text,
+    activity_status text,
+    longtitude_self real,
+    latitude_self real,
+    report_status_self text,
+    reported_times integer,
+    times_my_profile_shown integer,
+
     age_min integer,
     age_max integer,
-    sex text,
-    interest text,
-    account_status text,
-    longtitude real,
-    latitude real,
-    report_status text,
-    reports_amount integer,
-    profile_views integer,
-    profiles_seen integer,
-    activity_status text,
-    query text
+    sex_required text,
+    interest_required text,
+    city_required text,
+
+    id_current integer,
+    likes_to text,
+    dislikes_to text,
+    query text,
+    seen_profiles text,
+    query_length integer
     )""")
 
 connection.commit()
@@ -65,9 +72,10 @@ connection.close()
 
 # gloval variables
 users_keys = ['id', 'name', 'sex', 'age', 'city', 'description', 'photo', 'interests', 'mode_text', 'mode_num', 'profile_created', 'username', 'chat_id']
-explore_settings_keys = ['id', 'chat_id', 'username', 'liked_times', 'age_min', 'age_max', 'sex', 'interest', 'account_status', 'longtitude', 'latitude', 'report_status', 'reports_amount', 'profile_views', 'profiles_seen', 'activity_status', 'query']
-basic_interests = ['стройка', 'тик-ток', 'игры', 'шахматы', 'работа', 'тусовки', 'языки', 'рисование', 'бизнес', 'питомцы', 'аниме', 'программирование', 'путешествия', 'общение', 'море', 'музыка', 'фотография', 'концерты', 'торговля', 'автомобили', 'отдых', 'дизайн', 'спорт', 'литература', 'ютуб', 'маркетинг', 'экономика', 'видеоблог', 'танцы', 'стартапы', 'театр', 'дети']
+explore_settings_keys = ['id', 'chat_id', 'username', 'likes_got_counter', 'account_status', 'activity_status', 'longtitude_self', 'latitude_self', 'report_status_self', 'reported_times', 'times_my_profile_shown', 'age_min', 'age_max', 'sex_required', 'interest_required', 'city_required', 'id_current', 'likes_to', 'dislikes_to', 'query', 'seen_profiles', 'query_length']
+basic_interests = ['build', 'tik-tok', 'games', 'chess', 'work', 'party', 'languages', 'art', 'business', 'pets', 'anime', 'coding', 'travel', 'chatting', 'sea', 'music', 'photo', 'concerts', 'trading', 'auto', 'vacation', 'design', 'sport', 'literature', 'youtube', 'marketing', 'economics', 'videoblog', 'dance', 'startup', 'theater', 'children']
 editable_settings = ['Name', 'Age', 'City', 'Sex', 'Description', 'Interests', 'Photo']
+reactions = [emoji.emojize(':heart_on_fire:'), emoji.emojize(':heart_with_arrow:'), emoji.emojize(':love_letter:'), emoji.emojize(':thumbs_down:')]
 
 
 # save photo
@@ -82,16 +90,23 @@ def photo_download(cursor, user, message):
 
 
 # print existing profile
-def my_profile(chat_id, user):
+def send_my_profile(chat_id, user):
     caption_generated = f"{user['name']}, {user['age']}, {user['city']}\n\n{user['description']}\n\nInterests: {', '.join(user['interests'].split()) + '.'}"
     bot.send_photo(chat_id, open(f"images/{'fe' * int(user['sex'] != 'M')}male/{user['id']}.jpg", 'rb'), caption = caption_generated)
 
+def send_profile(chat_id, user):
+    caption_generated = f"{user['name']}, {user['age']}, {user['city']}\n\n{user['description']}\n\nInterests: {', '.join(user['interests'].split()) + '.'}"
+    bot.send_photo(chat_id, open(f"images/{'fe' * int(user['sex'] != 'M')}male/{user['id']}.jpg", 'rb'), caption = caption_generated, reply_markup = markup.explore)
+
 
 # most important function to get user data from db
-def get_data(cursor, user_id):
+def get_profile(cursor, user_id):
     global users_keys
     return dict(zip(users_keys, cursor.execute(f"SELECT * FROM users WHERE id == {user_id}").fetchone()))
 
+def get_explore_settings(cursor, user_id):
+    global explore_settings_keys
+    return dict(zip(explore_settings_keys, cursor.execute(f"SELECT * FROM explore_settings WHERE id == {user_id}").fetchone()))
 
 def back_to_main_menu(cursor, user, message):
     cursor.execute(f"UPDATE users SET mode_num = 0, mode_text = 'main_menu' WHERE id = {user['id']}")
@@ -105,10 +120,62 @@ def create_user(cursor, message):
     cursor.execute(f"INSERT INTO users VALUES ({message.from_user.id},'','','','','','','','main_menu',0,0,'{message.from_user.username}',{message.chat.id})")
 
 def create_explore_settings(cursor, message):
-    cursor.execute(f"INSERT INTO explore_settings VALUES ({message.from_user.id}, {message.chat.id}, '{message.from_user.username}', 0, 0, 0, '', '', 'basic', 0, 0, 'clear', 0, 0, 0, 'on', '')")
+    cursor.execute(f"INSERT INTO explore_settings VALUES ({message.from_user.id}, {message.chat.id}, '{message.from_user.username}', 0, 'free', 'active', 0, 0, 'not_reported', 0, 0, 0, 0, '', '', '', -1, '[]', '[]', 0)")
     cursor.execute(f"UPDATE users SET profile_created = 2 WHERE id == {message.from_user.id}")
 
+def create_query(user_id, cursor): # with no filters
+    new_query = cursor.execute(f"SELECT id FROM explore_settings WHERE id != {user_id}").fetchall()
+    cursor.execute(f"UPDATE explore_settings SET query = '{ats(new_query)}', query_length = {len(new_query)} WHERE id = {user_id}")
 
+def next_profile(cursor, user_id):
+    anket_arr = sta(cursor.execute(f"SELECT query FROM explore_settings WHERE id == {user_id}").fetchone())
+    cursor.execute(f"UPDATE explore_settings SET id_current = {anket_arr[0]}, query = '{ats(anket_arr[1:])}', query_length = {len(anket_arr) - 1} WHERE id == {user_id}")
+
+def like(cursor, user, settings):
+    bot.send_message(user['chat_id'], f"We sent {'her' if user['sex'] == 'M' else 'him'} message from you.")
+    send_profile(settings['id_current'], user)
+    bot.send_message(settings['id_current'], f"This user liked you! Here's the tag: @{user['username']}")
+    previous = cursor.execute(f"SELECT likes_got_counter FROM explore_settings WHERE id == {settings['id_current']}").fetchone()
+    cursor.execute(f"UPDATE explore_settings SET likes_got_counter = {previous + 1} WHERE id == {settings['id_current']}")
+
+def anon_like(cursor, liker_id, liked_id):
+    previous = cursor.execute(f"SELECT likes_got_counter FROM explore_settings WHERE id == {liked_id}").fetchone()
+    cursor.execute(f"UPDATE explore_settings SET likes_got_counter = {previous + 1} WHERE id == {liked_id}")
+
+    if(liker_id in sta(cursor.execute(f"SELECT likes_to FROM explore_settings WHERE id == {liked_id}").fetchone())):
+        match(cursor, liker_id, liked_id)
+        profile_seen(liked_id, liker_id)
+    else:
+        previous = sta(cursor.execute(f"SELECT likes_to FROM explore_settings WHERE id == {liker_id}").fetchone())
+        cursor.execute(f"UPDATE explore_settings SET likes_to = '{[liked_id] + previous}' WHERE id == {liker_id}")
+
+        liked_query = sta(cursor.execute(f"SELECT query FROM explore_settings WHERE id == {liked_id}").fetchone())
+        cursor.execute(f"UPDATE explore_settings SET query = '{[liker_id] + liked_query}' WHERE id == {liked_id}")
+
+        bot.send_message(liker_id, f"If this sympathy is mutual, we will let you know.")
+
+def match(cursor, id1, id2):
+    username1 = cursor.execute(f"SELECT username FROM users WHERE id == {id1}").fetchone()
+    username2 = cursor.execute(f"SELECT username FROM users WHERE id == {id2}").fetchone()
+    send_profile(id1, get_profile(cursor, id2))
+    send_profile(id2, get_profile(cursor, id1))
+    bot.send_message(id1, f"You have a new match with @{username2}. Enjoy each other!")
+    bot.send_message(id2, f"You have a new match with @{username1}. Enjoy each other!")
+
+
+def profile_seen(cursor, explorer_id, explored_id):
+    seen = sta(cursor.execute(f"SELECT seen_profiles FROM explore_settings WHERE id == {explorer_id}").fetchone())
+    cursor.execute(f"UPDATE explore_settings SET seen_profiles = '{ats([explored_id] + seen)}' WHERE id == {explorer_id}")
+
+    times = cursor.execute(f"SELECT times_my_profile_shown FROM explore_settings WHERE id == {explored_id}").fetchone()
+    cursor.execute(f"UPDATE explore_settings SET times_my_profile_shown = {times + 1} WHERE id == {explored_id}")
+
+
+def ats(arr):
+    return json.dumps(arr)
+
+def sta(string):
+    return json.loads(string)
 
 # handlers
 
@@ -129,7 +196,8 @@ def welcome_command(message):
 
 @bot.message_handler(commands=['help'])
 def help_command(message):
-    bot.send_message(message.from_user.id, f"/start - Begins the dialog\n/help - Shares info about bot\n")
+    bot.send_message(message.from_user.id, f"/start - Begins the dialog\n/help - Shares info about bot\nLast message = {message.text}")
+
 
 @bot.message_handler(content_types=['text'])
 def reply_to_message(message):
@@ -148,7 +216,7 @@ def reply_to_message(message):
             create_user(cursor, message)
             bot.send_message(message.chat.id, 'Hello! Start chatting with creating your profile in settings.', reply_markup = markup.main)
 
-        user = get_data(cursor, user_id)
+        user = get_profile(cursor, user_id)
 
         if user['mode_text'] == 'creating_profile':
             if user['mode_num'] == 1 and message.text != 'Back to main menu':
@@ -169,7 +237,7 @@ def reply_to_message(message):
                 bot.send_message(message.chat.id, emoji.emojize('Choose your interest. To end press continue:fast-forward_button: button at the bottom.'), reply_markup = create_interests(user['interests']))
             elif user['mode_num'] == 5 and ('continue' not in message.text) and message.text in (set(basic_interests) - set(user['interests'].split())) and message.text != 'Back to main menu':
                 cursor.execute(f"UPDATE users SET interests = '{user['interests'] + ' '  + message.text}', mode_num = 5 WHERE id = {user_id};") # append interests 1 by 1
-                user = get_data(cursor, user_id)
+                user = get_profile(cursor, user_id)
                 bot.send_message(message.chat.id, emoji.emojize('Added! Anything else? To end press continue:fast-forward_button: button at the bottom.'), reply_markup = create_interests(user['interests']))
             elif user['mode_num'] == 5 and 'continue' in message.text and message.text != 'Back to main menu':
                 cursor.execute(f"UPDATE users SET mode_num = 6 WHERE id = {user_id};")
@@ -187,7 +255,7 @@ def reply_to_message(message):
                 bot.send_message(message.chat.id, "Choose the required option", reply_markup = markup.create)
             else:
                 bot.send_message(message.chat.id, "This is your profile now", reply_markup = markup.edit)
-                my_profile(message.chat.id, user)
+                send_my_profile(message.chat.id, user)
 
         elif message.text == 'Edit profile' and user['profile_created'] > 0:
             bot.send_message(message.chat.id, 'Choose what you want to edit.', reply_markup = markup.edit_profile)
@@ -210,12 +278,12 @@ def reply_to_message(message):
             if user['mode_num'] == editable_settings.index('Interests') + 1:
                 if ('continue' not in message.text) and message.text in (set(basic_interests) - set(user['interests'].split())):
                     cursor.execute(f"UPDATE users SET interests = '{user['interests'] + ' '  + message.text}' WHERE id = {user_id};") # append interests 1 by 1
-                    user = get_data(cursor, user_id)
+                    user = get_profile(cursor, user_id)
                     bot.send_message(message.chat.id, emoji.emojize('Added! Anything else? To end press continue:fast-forward_button: button at the bottom.'), reply_markup = create_interests(user['interests']))
                 elif user['mode_num'] == editable_settings.index('Interests') + 1 and 'continue' in message.text and message.text != 'Back to main menu':
                     bot.send_message(message.chat.id, 'Your interests field is updated. This is your profile now.', reply_markup = markup.edit)
                     cursor.execute(f"UPDATE users SET mode_num = 0 WHERE id = {user_id}")
-                    my_profile(message.chat.id, user)
+                    send_my_profile(message.chat.id, user)
 
             else:
                 if user['mode_num'] == editable_settings.index('Sex') + 1:
@@ -235,8 +303,8 @@ def reply_to_message(message):
                     cursor.execute(f"UPDATE users SET {editable_settings[user['mode_num'] - 1].lower()} = '{message.text}' WHERE id = {user_id}")
                 cursor.execute(f"UPDATE users SET mode_num = 0 WHERE id = {user_id}")
                 bot.send_message(message.chat.id, f"Your {editable_settings[user['mode_num'] - 1].lower()} field is updated. This is your profile now.", reply_markup = markup.edit)
-                user = get_data(cursor, user_id)
-                my_profile(message.chat.id, user)
+                user = get_profile(cursor, user_id)
+                send_my_profile(message.chat.id, user)
 
 
         elif message.text == 'Create profile' and user['profile_created'] == 0:
@@ -246,12 +314,40 @@ def reply_to_message(message):
         elif message.text == 'Explore' and user['mode_text'] == 'main_menu' and user['profile_created'] > 0:
             bot.send_message(message.chat.id, 'Explore page', reply_markup = markup.explore_menu)
             cursor.execute(f"UPDATE users SET mode_text = 'explore_menu' WHERE id = {user_id}")
-            if user['profile_created'] == 1:
-                create_explore_settings(cursor, message)
 
         elif message.text == 'Explore new' and user['mode_text'] == 'explore_menu' and user['profile_created'] > 0:
-            bot.send_message(message.chat.id, 'New ankets for you', reply_markup = markup.explore)
+            create_query(message.from_user.id, cursor)
             cursor.execute(f"UPDATE users SET mode_text = 'explore' WHERE id = {user_id}")
+            bot.send_message(message.chat.id, 'New ankets for you')
+            next_profile(cursor, user_id)
+            send_profile(message.chat.id, get_profile(cursor, get_explore_settings(cursor, user_id)['id_current']))
+
+        elif user['mode_text'] == 'explore' and message.text in reactions:
+
+            settings = get_explore_settings(cursor, user_id)
+            id_current = settings['id_current']
+
+            if message.text == emoji.emojize(':heart_on_fire:'):
+                like(cursor, user, settings)
+                profile_seen(cursor, id_current, user_id)
+            elif message.text == emoji.emojize(':heart_with_arrow:'):
+                anon_like(cursor, user_id, id_current)
+            elif message.text == emoji.emojize(':thumbs_down:'):
+                print('dislike()')
+            else: #love_letter
+                print('love_letter()')
+
+            profile_seen(cursor, user_id, id_current)
+
+
+            if(settings['query_length'] != 0):
+                next_profile(cursor, user['id'])
+                send_profile(message.chat.id, get_profile(cursor, get_explore_settings(cursor, user_id)['id_current']))
+            else:
+                bot.send_message(message.chat.id, 'No more users to explore left.', reply_markup = markup.explore_menu)
+                cursor.execute(f"UPDATE users SET mode_text = 'explore_menu' WHERE id = {user_id}")
+                cursor.execute(f"UPDATE explore_settings SET id_current = -1 WHERE id = {user_id}")
+
 
         elif message.text == 'Back to menu' and user['mode_text'] == 'explore':
             bot.send_message(message.chat.id, 'Explore menu', reply_markup = markup.explore_menu)
@@ -274,18 +370,19 @@ def reply_to_photo(message):
     cursor = connection.cursor()
 
     user_id = message.from_user.id
-    user = get_data(cursor, user_id)
+    user = get_profile(cursor, user_id)
 
     if user['mode_num'] == 7 and user['mode_text'] == 'creating_profile':
         photo_download(cursor, user, message)
         cursor.execute(f"UPDATE users SET mode_num = 0, mode_text = 'main_menu', photo = 'images/{'fe' * int(user['sex'] != 'M')}male/{user_id}.jpg', profile_created = 1 WHERE id = {user_id}")
+        create_explore_settings(cursor, message)
         bot.send_message(message.chat.id, 'The creation of your profile is done. Now you can explore other profiles.', reply_markup = markup.main)
 
     elif user['mode_text'] == 'profile_editing' and user['mode_num'] == editable_settings.index('Photo') + 1:
         photo_download(cursor, user, message)
         cursor.execute(f"UPDATE users SET mode_num = 0, mode_text = 'profile_editing' WHERE id = {user_id}")
         bot.send_message(message.chat.id, 'Your photo is updated. This is your profile now.', reply_markup = markup.edit)
-        my_profile(message.chat.id, user)
+        send_my_profile(message.chat.id, user)
 
     connection.commit()
     connection.close()

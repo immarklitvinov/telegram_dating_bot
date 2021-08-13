@@ -6,7 +6,7 @@ import sqlite3
 from telebot import types
 
 keys = ['id', 'name', 'sex', 'age', 'city', 'description', 'photo', 'interests', 'mode_text', 'mode_num', 'profile_created', 'username']
-basic_interests = ['стройка', 'тик-ток', 'игры', 'шахматы', 'работа', 'тусовки', 'языки', 'рисование', 'бизнес', 'питомцы', 'аниме', 'программирование', 'путешествия', 'общение', 'море', 'музыка', 'фотография', 'концерты', 'торговля', 'автомобили', 'отдых', 'дизайн', 'спорт', 'литература', 'ютуб', 'маркетинг', 'экономика', 'видеоблог', 'танцы', 'стартапы', 'театр', 'дети']
+basic_interests = ['build', 'tik-tok', 'games', 'chess', 'work', 'party', 'languages', 'art', 'business', 'pets', 'anime', 'coding', 'travel', 'chatting', 'sea', 'music', 'photo', 'concerts', 'trading', 'auto', 'vacation', 'design', 'sport', 'literature', 'youtube', 'marketing', 'economics', 'videoblog', 'dance', 'startup', 'theater', 'children']
 editable_settings = ['Name', 'Age', 'City', 'Sex', 'Description', 'Interests', 'Photo']
 
 
@@ -55,10 +55,10 @@ item2_explore_menu = types.KeyboardButton('Search filters')
 explore_menu.add(item1_explore_menu, item2_explore_menu, item1_back_to_main)
 
 explore = types.ReplyKeyboardMarkup(resize_keyboard = True)
-item1_explore = types.KeyboardButton(text = emoji.emojize(':heart_on_fire::heart_on_fire:'))
-item2_explore = types.KeyboardButton(emoji.emojize(':heart_with_arrow::bell_with_slash:'))
-item3_explore = types.KeyboardButton(emoji.emojize(':love_letter::love_letter:'))
-item4_explore = types.KeyboardButton(emoji.emojize(':thumbs_down::see-no-evil_monkey:'))
+item1_explore = types.KeyboardButton(text = emoji.emojize(':heart_on_fire:'))
+item2_explore = types.KeyboardButton(emoji.emojize(':heart_with_arrow:'))
+item3_explore = types.KeyboardButton(emoji.emojize(':love_letter:'))
+item4_explore = types.KeyboardButton(emoji.emojize(':thumbs_down:'))
 item1_back_to_explore_menu = types.KeyboardButton('Back to menu')
 explore.row(item1_explore, item2_explore, item3_explore, item4_explore, item1_back_to_explore_menu)
 

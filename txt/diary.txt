@@ -222,3 +222,15 @@ Creating tgbot by time.
 1:58 - found out that there's json library in python and it's not a problem at all now to have query storaged
 2:39 - created all necessary fields for my database: table explore_settings and additional columns in users
 3:13 - adding info to old and new db works, now I commit changes and end up for today. feels like im closer
+6:20 - I debugged the fucking bug connected with import problem. Lost day, though I now know how to create query without filters
+6:20 - creating query without any search filters
+7 - created easiest query create function
+7 - creating structure of likes
+7:47 - wrote the logic, it's only left to wright functions
+8 - restructuring my databases, starting to code those functions
+8:45 - database updated
+9:50 - created like() next_profile() and profile_seen() functions.
+10:20 - debugging
+10:35 - debugged like() and next_profile() and profile_seen().
+10:35 - creating anon_like() and editing db
+10:25 - created anon_like(). Can't wait to debug and test!!!!!
