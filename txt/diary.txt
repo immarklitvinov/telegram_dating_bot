@@ -233,4 +233,14 @@ Creating tgbot by time.
 10:20 - debugging
 10:35 - debugged like() and next_profile() and profile_seen().
 10:35 - creating anon_like() and editing db
-10:25 - created anon_like(). Can't wait to debug and test!!!!!
+10:45 - created anon_like(). Can't wait to debug and test!!!!!
+10:45 - started to debug anon_like()
+11:00 - anon_like() successfully debugged
+11:00 - created dislike() function, deleted function of love_letter
+
+raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=25)
+
+In the end I will have to fix this shit above via connecting webhook.
+
+11:00 - creating report(user) function

@@ -75,7 +75,7 @@ users_keys = ['id', 'name', 'sex', 'age', 'city', 'description', 'photo', 'inter
 explore_settings_keys = ['id', 'chat_id', 'username', 'likes_got_counter', 'account_status', 'activity_status', 'longtitude_self', 'latitude_self', 'report_status_self', 'reported_times', 'times_my_profile_shown', 'age_min', 'age_max', 'sex_required', 'interest_required', 'city_required', 'id_current', 'likes_to', 'dislikes_to', 'query', 'seen_profiles', 'query_length']
 basic_interests = ['build', 'tik-tok', 'games', 'chess', 'work', 'party', 'languages', 'art', 'business', 'pets', 'anime', 'coding', 'travel', 'chatting', 'sea', 'music', 'photo', 'concerts', 'trading', 'auto', 'vacation', 'design', 'sport', 'literature', 'youtube', 'marketing', 'economics', 'videoblog', 'dance', 'startup', 'theater', 'children']
 editable_settings = ['Name', 'Age', 'City', 'Sex', 'Description', 'Interests', 'Photo']
-reactions = [emoji.emojize(':heart_on_fire:'), emoji.emojize(':heart_with_arrow:'), emoji.emojize(':love_letter:'), emoji.emojize(':thumbs_down:')]
+reactions = [emoji.emojize(':red_heart:'), emoji.emojize(':heart_with_arrow:'), emoji.emojize(':love_letter:'), emoji.emojize(':thumbs_down:')]
 
 
 # save photo
@@ -144,7 +144,7 @@ def anon_like(cursor, liker_id, liked_id):
 
     if(liker_id in sta(cursor.execute(f"SELECT likes_to FROM explore_settings WHERE id == {liked_id}").fetchone())):
         match(cursor, liker_id, liked_id)
-        profile_seen(liked_id, liker_id)
+        profile_seen(cursor, liked_id, liker_id)
     else:
         previous = sta(cursor.execute(f"SELECT likes_to FROM explore_settings WHERE id == {liker_id}").fetchone())
         cursor.execute(f"UPDATE explore_settings SET likes_to = '{[liked_id] + previous}' WHERE id == {liker_id}")
@@ -154,13 +154,12 @@ def anon_like(cursor, liker_id, liked_id):
 
         bot.send_message(liker_id, f"If this sympathy is mutual, we will let you know.")
 
-def match(cursor, id1, id2):
-    username1 = cursor.execute(f"SELECT username FROM users WHERE id == {id1}").fetchone()
-    username2 = cursor.execute(f"SELECT username FROM users WHERE id == {id2}").fetchone()
-    send_profile(id1, get_profile(cursor, id2))
-    send_profile(id2, get_profile(cursor, id1))
-    bot.send_message(id1, f"You have a new match with @{username2}. Enjoy each other!")
-    bot.send_message(id2, f"You have a new match with @{username1}. Enjoy each other!")
+def match(cursor, liker_id, liked_id):
+    username1 = cursor.execute(f"SELECT username FROM users WHERE id == {liker_id}").fetchone()
+    username2 = cursor.execute(f"SELECT username FROM users WHERE id == {liked_id}").fetchone()
+    send_profile(liked_id, get_profile(cursor, liker_id))
+    bot.send_message(liker_id, f"You liked each other with @{username2}. Enjoy meeting!")
+    bot.send_message(liked_id, f"You liked each other with @{username1}. Enjoy meeting!")
 
 
 def profile_seen(cursor, explorer_id, explored_id):
@@ -169,6 +168,16 @@ def profile_seen(cursor, explorer_id, explored_id):
 
     times = cursor.execute(f"SELECT times_my_profile_shown FROM explore_settings WHERE id == {explored_id}").fetchone()
     cursor.execute(f"UPDATE explore_settings SET times_my_profile_shown = {times + 1} WHERE id == {explored_id}")
+
+def dislike(cursor, explorer_id, explored_id):
+    seen = sta(cursor.execute(f"SELECT seen_profiles FROM explore_settings WHERE id == {explored_id}").fetchone())
+    cursor.execute(f"UPDATE explore_settings SET seen_profiles = '{ats([explorer_id] + seen)}' WHERE id == {explored_id}")
+    query = sta(cursor.execute(f"SELECT query FROM explore_settings WHERE id == {explored_id}").fetchone())
+
+    if explorer_id in query:
+        cursor.execute(f"UPDATE explore_settings SET query = '{ats(query.remove(explorer_id))}', query_length = {len(query) - 1} WHERE id == {explored_id}")
+    else:
+        pass
 
 
 def ats(arr):
@@ -327,15 +336,13 @@ def reply_to_message(message):
             settings = get_explore_settings(cursor, user_id)
             id_current = settings['id_current']
 
-            if message.text == emoji.emojize(':heart_on_fire:'):
+            if message.text == emoji.emojize(':red_heart:'):
                 like(cursor, user, settings)
                 profile_seen(cursor, id_current, user_id)
             elif message.text == emoji.emojize(':heart_with_arrow:'):
                 anon_like(cursor, user_id, id_current)
-            elif message.text == emoji.emojize(':thumbs_down:'):
-                print('dislike()')
-            else: #love_letter
-                print('love_letter()')
+            else:
+                dislike(cursor, user_id, id_current)
 
             profile_seen(cursor, user_id, id_current)
 

@@ -55,12 +55,11 @@ item2_explore_menu = types.KeyboardButton('Search filters')
 explore_menu.add(item1_explore_menu, item2_explore_menu, item1_back_to_main)
 
 explore = types.ReplyKeyboardMarkup(resize_keyboard = True)
-item1_explore = types.KeyboardButton(text = emoji.emojize(':heart_on_fire:'))
+item1_explore = types.KeyboardButton(text = emoji.emojize(':red_heart:'))
 item2_explore = types.KeyboardButton(emoji.emojize(':heart_with_arrow:'))
-item3_explore = types.KeyboardButton(emoji.emojize(':love_letter:'))
-item4_explore = types.KeyboardButton(emoji.emojize(':thumbs_down:'))
+item3_explore = types.KeyboardButton(emoji.emojize(':thumbs_down:'))
 item1_back_to_explore_menu = types.KeyboardButton('Back to menu')
-explore.row(item1_explore, item2_explore, item3_explore, item4_explore, item1_back_to_explore_menu)
+explore.row(item1_explore, item2_explore, item3_explore, item1_back_to_explore_menu)
 
 
 # special markup when user picks up interests
