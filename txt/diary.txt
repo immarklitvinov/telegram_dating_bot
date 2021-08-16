@@ -244,3 +244,8 @@ requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.telegram.org', po
 In the end I will have to fix this shit above via connecting webhook.
 
 11:00 - creating report(user) function
+12:00 - created block() and report() functions
+12:00 - debugging reporting(), debug reported
+12:00 - editing create_query() function
+13:00 - creating vip(id) function -> explore_settings edition -> create_query editing
+14:00 - beginning the creation of explore_settings edition, vip(cursor, id) is already created
