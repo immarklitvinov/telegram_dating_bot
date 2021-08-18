@@ -249,3 +249,12 @@ In the end I will have to fix this shit above via connecting webhook.
 12:00 - editing create_query() function
 13:00 - creating vip(id) function -> explore_settings edition -> create_query editing
 14:00 - beginning the creation of explore_settings edition, vip(cursor, id) is already created
+14:00 creating editing of explore_settings
+15:00 - still creating editing of explore_settings
+16:06 - still creating editing of explore_settings
+17:00 - posted instastory, @danav found bug connected with settings. now need to edit this part. and debug interests_arr
+17:01 - fixing bugs found
+17:59 - building the whole platform again
+18:00 - system successfully updated
+19:00 - all bugs connected with system successfully fixed
+19:01 - now modifying create_query()

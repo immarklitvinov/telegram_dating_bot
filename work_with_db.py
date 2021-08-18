@@ -14,7 +14,10 @@ connection.row_factory = row_factory_func
 cursor = connection.cursor()
 
 print('users are:\n')
+#for elem in cursor.execute('SELECT * FROM users'):
+#    print(elem[0], elem[1])
 print(cursor.execute('SELECT * FROM users').fetchall())
+
 print('\ntheir explore settings:\n')
 print(cursor.execute('SELECT * FROM explore_settings').fetchall())
 

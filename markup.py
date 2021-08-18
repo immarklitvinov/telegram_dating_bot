@@ -54,6 +54,10 @@ item1_explore_menu = types.KeyboardButton('Explore new')
 item2_explore_menu = types.KeyboardButton('Search filters (VIP only)')
 explore_menu.add(item1_explore_menu, item2_explore_menu, item1_back_to_main)
 
+explore_menu_vip = types.ReplyKeyboardMarkup(resize_keyboard = True)
+item1_explore_menu_vip = types.KeyboardButton('Search filters')
+explore_menu_vip.add(item1_explore_menu, item1_explore_menu_vip, item1_back_to_main)
+
 explore = types.ReplyKeyboardMarkup(resize_keyboard = True)
 item1_explore = types.KeyboardButton(text = emoji.emojize(':red_heart:'))
 item2_explore = types.KeyboardButton(emoji.emojize(':heart_with_arrow:'))
@@ -64,15 +68,18 @@ explore.row(item1_explore, item2_explore, item3_explore, item4_explore, item1_ba
 
 explore_settings_menu = types.ReplyKeyboardMarkup(resize_keyboard = True)
 item1_explore_settings_menu = types.KeyboardButton('Age')
-item1_explore_settings_menu = types.KeyboardButton('Interest')
-item1_explore_settings_menu = types.KeyboardButton('City')
-explore.row(item1_explore_settings_menu, item1_explore_settings_menu, item1_explore_settings_menu, item1_back_to_explore_menu)
+item2_explore_settings_menu = types.KeyboardButton('Interest')
+item3_explore_settings_menu = types.KeyboardButton('City')
+explore_settings_menu.row(item1_explore_settings_menu, item2_explore_settings_menu, item3_explore_settings_menu, item1_back_to_explore_menu)
 
 
 all_interests = types.ReplyKeyboardMarkup(resize_keyboard = True)
 for elem in set(basic_interests):
-    markup.add(types.KeyboardButton(elem))
+    all_interests.add(types.KeyboardButton(elem))
 all_interests.add(item1_back_to_explore_menu)
+
+back_to_explore_menu = types.ReplyKeyboardMarkup(resize_keyboard = True)
+back_to_explore_menu.add(item1_back_to_explore_menu)
 
 # special markup when user picks up interests
 def create_interests(interests):
