@@ -70,8 +70,17 @@ explore_settings_menu = types.ReplyKeyboardMarkup(resize_keyboard = True)
 item1_explore_settings_menu = types.KeyboardButton('Age')
 item2_explore_settings_menu = types.KeyboardButton('Interest')
 item3_explore_settings_menu = types.KeyboardButton('City')
-explore_settings_menu.row(item1_explore_settings_menu, item2_explore_settings_menu, item3_explore_settings_menu, item1_back_to_explore_menu)
+item4_explore_settings_menu = types.KeyboardButton('Sex')
+explore_settings_menu.add(item1_explore_settings_menu)
+explore_settings_menu.add(item2_explore_settings_menu)
+explore_settings_menu.add(item3_explore_settings_menu)
+explore_settings_menu.add(item4_explore_settings_menu)
+explore_settings_menu.add(item1_back_to_explore_menu)
 
+sex_required_edit = types.ReplyKeyboardMarkup(resize_keyboard=True)
+item1_sex = types.KeyboardButton(emoji.emojize('Male :boy:'))
+item2_sex = types.KeyboardButton(emoji.emojize('Female :girl:'))
+sex_required_edit.add(item1_sex, item2_sex, item1_back_to_explore_menu)
 
 all_interests = types.ReplyKeyboardMarkup(resize_keyboard = True)
 for elem in set(basic_interests):

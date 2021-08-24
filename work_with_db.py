@@ -13,6 +13,9 @@ def row_factory_func(cursor, row):
 connection.row_factory = row_factory_func
 cursor = connection.cursor()
 
+
+
+cursor.execute(f"UPDATE explore_settings SET account_status = 'free' WHERE id == 403500796")
 print('users are:\n')
 #for elem in cursor.execute('SELECT * FROM users'):
 #    print(elem[0], elem[1])
