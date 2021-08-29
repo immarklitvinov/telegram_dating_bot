@@ -123,10 +123,10 @@ def create_user(cursor, message):
     cursor.execute(f"INSERT INTO explore_settings VALUES ({message.from_user.id}, {message.chat.id}, '{message.from_user.username}', 0, 'free', 'active', 0, 0, 'not_reported', 0, 0, 0, 0, '', '', '', -1, '[]', '[]', '[]', '[]', 0)")
 
 def create_query(user_id, cursor, settings, user): # with filters
-    if(settings['account_status'] == 'vip'):
-        new_query = cursor.execute(f"SELECT id FROM users WHERE id != {user_id} AND age >= {settings['age_min']} AND age <= {settings['age_max']} AND sex == '{settings['sex_required']}' AND interests LIKE '%{settings['interest_required']}%' AND report_status_self == 'not_reported' and ").fetchall()
-    else:
-        new_query = cursor.execute(f"SELECT id FROM users WHERE id != {user_id}").fetchall()
+    #if(settings['account_status'] == 'vip'):
+    #    new_query = cursor.execute(f"SELECT id FROM users WHERE id != {user_id} AND age >= {settings['age_min']} AND age <= {settings['age_max']} AND sex == '{settings['sex_required']}' AND interests LIKE '%{settings['interest_required']}%'").fetchall()
+    #else:
+    new_query = cursor.execute(f"SELECT id FROM users WHERE id != {user_id} AND sex != '{user['sex']}' AND id NOT IN ({settings['seen_profiles'][1:-1]})").fetchall()
 
     cursor.execute(f"UPDATE explore_settings SET query = '{ats(new_query)}', query_length = {len(new_query)} WHERE id = {user_id}")
 
@@ -175,9 +175,13 @@ def dislike(cursor, explorer_id, explored_id):
     seen = sta(cursor.execute(f"SELECT seen_profiles FROM explore_settings WHERE id == {explored_id}").fetchone())
     cursor.execute(f"UPDATE explore_settings SET seen_profiles = '{ats([explorer_id] + seen)}' WHERE id == {explored_id}")
     query = sta(cursor.execute(f"SELECT query FROM explore_settings WHERE id == {explored_id}").fetchone())
+    try:
+        query.remove(explorer_id)
+    except ValueError:
+        pass
 
     if explorer_id in query:
-        cursor.execute(f"UPDATE explore_settings SET query = '{ats(query.remove(explorer_id))}', query_length = {len(query) - 1} WHERE id == {explored_id}")
+        cursor.execute(f"UPDATE explore_settings SET query = '{ats(query)}', query_length = {len(query) - 1} WHERE id == {explored_id}")
     else:
         pass
 
@@ -200,7 +204,7 @@ def vip(cursor, user_id):
     bot.send_message(user_id, f"Account changed to vip.", reply_markup = vip_markup('vip'))
 
 def send_explore_settings(cursor, settings, user_id):
-    bot.send_message(user_id, f"Your current explore settings:\n\nAge: {'none' if settings['age_min'] == 0 else str(settings['age_min']) + '-' + str(settings['age_max'])}\n\nInterest: {'none' if settings['interest_required'] == '' else settings['interest_required']}\n\nCity: {'none' if settings['city_required'] == '' else settings['city_required']}\n\nSex: {'none' if settings['sex_required'] == '' else 'Male' if settings['sex_required'] == 'M' else 'Female'}", reply_markup = /÷÷÷///markup.explore_settings_menu)
+    bot.send_message(user_id, f"Your current explore settings:\n\nAge: {'none' if settings['age_min'] == 0 else str(settings['age_min']) + '-' + str(settings['age_max'])}\n\nInterest: {'none' if settings['interest_required'] == '' else settings['interest_required']}\n\nCity: {'none' if settings['city_required'] == '' else settings['city_required']}\n\nSex: {'none' if settings['sex_required'] == '' else 'Male' if settings['sex_required'] == 'M' else 'Female'}", reply_markup  = markup.explore_settings_menu)
 
 def explore_profiles(cursor, user_id):
     settings = get_explore_settings(cursor, user_id)

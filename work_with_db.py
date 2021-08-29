@@ -15,10 +15,11 @@ cursor = connection.cursor()
 
 
 
-cursor.execute(f"UPDATE explore_settings SET account_status = 'free' WHERE id == 403500796")
+#cursor.execute(f"UPDATE explore_settings SET account_status = 'free' WHERE id == 403500796")
 print('users are:\n')
 #for elem in cursor.execute('SELECT * FROM users'):
 #    print(elem[0], elem[1])
+
 print(cursor.execute('SELECT * FROM users').fetchall())
 
 print('\ntheir explore settings:\n')

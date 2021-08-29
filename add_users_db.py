@@ -21,6 +21,9 @@ cursor.execute(f"INSERT INTO explore_settings VALUES (529625530, 529625530, 'egn
 cursor.execute(f"INSERT INTO users VALUES (403500796, 'Mark', 'M', '18', 'Moscow', 'Blabla', 'images/male/403500796.jpg', ' sea chatting auto sport games vacation pets build theater trading chess children dance', 'explore_menu', 0, 1, 'marklitvinov', 403500796, 'not_reported')")
 cursor.execute(f"INSERT INTO explore_settings VALUES (403500796, 403500796, 'marklitvinov', 0, 'free', 'active', 0, 0, 'not_reported', 0, 0, 0, 0, '', '', '', -1, '[]', '[]', '[]', '[]', 0)")
 
+cursor.execute(f"INSERT INTO users VALUES (927476617, 'Мария', 'F', '18', 'Санкт-Петербург', 'Пишу игры, работаю с друзьями в магазине одежды в качестве дизайнера и люблю всех-всех питомцев(кроме пауков)', 'images/female/927476617.jpg', ' business coding sport design dance art music', 'explore_menu', 0, 1, 'matia20', 927476617, 'not_reported')")
+cursor.execute(f"INSERT INTO explore_settings VALUES (927476617, 927476617, 'matia20', 0, 'free', 'active', 0, 0, 'not_reported', 0, 0, 0, 0, '', '', '', -1, '[]', '[]', '[]', '[]', 0)")
+
 #print()
 #print(cursor.execute(f"SELECT query FROM explore_settings WHERE id == 403500796").fetchone())
 #print(type(cursor.execute(f"SELECT query FROM explore_settings WHERE id == 403500796").fetchone()))

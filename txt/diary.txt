@@ -257,7 +257,7 @@ In the end I will have to fix this shit above via connecting webhook.
 17:59 - building the whole platform again
 18:00 - system successfully updated
 19:00 - all bugs connected with system successfully fixed
-19:01 - now modifying create_query() and the plan is explore_settings edition -> create_query() editing -> strip-payments -> install webhook -> debug +- multibotsystem -> heroku server and done.
+19:01 - now modifying create_query() and the plan is explore_settings edition -> create_query() editing -> stripe-payments -> install webhook -> debug +- multibotsystem -> heroku server and done.
 19:30 - added edition of sex_required; continuing editing of create_query()
 20:00 - exploring how WHERE parameters work
 20:01 - create_query() successfully edited, only SEEN and CITY are not trivial. now debugging
@@ -265,3 +265,4 @@ In the end I will have to fix this shit above via connecting webhook.
 also i faced the problem that my create_query() params don't work.
 20:50 - it was really strange but I changed nothing and it now works.
 21:00 - now i know i can use NOT in SELECT. problems for now are bugged vip create query and city in select. Their fixes: users + explore_settings / get acces to another db or append seen to users AND string.format()
+22:00 - seen debuged!!!!!!!!!!!!!!!!!!!!!!!! Only vip wtf left to be edited, as city in select and create vip query - are connected with vip accounts
