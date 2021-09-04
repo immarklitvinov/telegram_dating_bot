@@ -126,7 +126,8 @@ def create_query(user_id, cursor, settings, user): # with filters
     #if(settings['account_status'] == 'vip'):
     #    new_query = cursor.execute(f"SELECT id FROM users WHERE id != {user_id} AND age >= {settings['age_min']} AND age <= {settings['age_max']} AND sex == '{settings['sex_required']}' AND interests LIKE '%{settings['interest_required']}%'").fetchall()
     #else:
-    new_query = cursor.execute(f"SELECT id FROM users WHERE id != {user_id} AND sex != '{user['sex']}' AND id NOT IN ({settings['seen_profiles'][1:-1]})").fetchall()
+    seen_str = f"({settings['seen_profiles'][1:-1]})"
+    new_query = cursor.execute(f"SELECT id FROM users WHERE id != {user_id} AND sex != '{user['sex']}' AND id NOT IN {seen_str}").fetchall()
 
     cursor.execute(f"UPDATE explore_settings SET query = '{ats(new_query)}', query_length = {len(new_query)} WHERE id = {user_id}")
 
@@ -250,7 +251,8 @@ def welcome_command(message):
     connection.commit()
     connection.close()
 
-@bot.message_handler(commands=['vip'])
+
+'''@bot.message_handler(commands=['vip'])
 def vip_command(message):
     connection = sqlite3.connect('people.db')
     connection.row_factory = row_factory_func
@@ -260,6 +262,7 @@ def vip_command(message):
 
     connection.commit()
     connection.close()
+'''
 
 @bot.message_handler(commands=['help'])
 def help_command(message):
@@ -416,50 +419,11 @@ def reply_to_message(message):
             bot.send_message(message.chat.id, 'Explore menu', reply_markup = vip_markup(settings['account_status']))
             cursor.execute(f"UPDATE users SET mode_text = 'explore_menu' WHERE id = {user_id}")
 
-        elif 'Search filters' in message.text and user['mode_text'] == 'explore_menu':
-            if(settings['account_status'] == 'vip'):
-                bot.send_message(user_id, f"Choose what to edit.", reply_markup = markup.explore_settings_menu)
-                cursor.execute(f"UPDATE users SET mode_text = 'explore_settings' WHERE id == {user_id}")
-                send_explore_settings(cursor, settings, user_id)
-            else:
-                bot.send_message(user_id, f"You are not VIP-account yet. Get it via /vip command.")
+        elif message.text == 'Clear explore history' and user['mode_text'] == 'explore_menu':
+            cursor.execute(f"UPDATE explore_settings SET seen_profiles = '[]'")
+            bot.send_message(user_id, "Your explore history is clear. Now you might get profiles you already seen.")
 
-        elif user['mode_text'] == 'explore_settings' and user['mode_num'] == 0:
-            if message.text == 'Interest':
-                cursor.execute(f"UPDATE users SET mode_num = 1 WHERE id = {user_id};")
-                bot.send_message(message.chat.id, emoji.emojize('Choose required interest.'), reply_markup = markup.all_interests)
-            elif message.text == 'Age':
-                cursor.execute(f"UPDATE users SET mode_num = 2 WHERE id = {user_id};")
-                bot.send_message(message.chat.id, f"Enter the desired age limit separated by a hyphen without spaces like that: 16-22.", reply_markup = markup.back_to_explore_menu)
-            elif message.text == 'City':
-                cursor.execute(f"UPDATE users SET mode_num = 3 WHERE id = {user_id};")
-                bot.send_message(message.chat.id, f"Enter the desired city", reply_markup = markup.back_to_explore_menu)
-            elif message.text == 'Sex':
-                cursor.execute(f"UPDATE users SET mode_num = 4 WHERE id = {user_id};")
-                bot.send_message(message.chat.id, f"Enter the required sex.", reply_markup = markup.sex_required_edit)
-            else:
-                bot.send_message(message.chat.id, f"Now you are in explore menu.", reply_markup = vip_markup(settings['account_status']))
-
-        elif user['mode_text'] == 'explore_settings' and user['mode_num'] != 0 and message.text != 'Back to menu':
-
-            if user['mode_num'] == 1 and message.text in basic_interests:
-                cursor.execute(f"UPDATE explore_settings SET interest_required = '{message.text}' WHERE id = {user_id};")
-                bot.send_message(user_id, f"Explore settings updated.", reply_markup = markup.explore_settings_menu)
-            elif user['mode_num'] == 2 and fits_age(message.text):
-                age_arr = list(map(int, message.text.split('-')))
-                cursor.execute(f"UPDATE explore_settings SET age_min = {age_arr[0]}, age_max = {age_arr[1]} WHERE id = {user_id};")
-                bot.send_message(user_id, f"Explore settings updated.", reply_markup = markup.explore_settings_menu)
-            elif user['mode_num'] == 3:
-                cursor.execute(f"UPDATE explore_settings SET city_required = '{message.text}' WHERE id = {user_id};")
-                bot.send_message(user_id, f"Explore settings updated.", reply_markup = markup.explore_settings_menu)
-            elif user['mode_num'] == 4 and 'Male' in message.text or 'Female' in message.text:
-                cursor.execute(f"UPDATE explore_settings SET sex_required = '{'M' if 'Male' in message.text else 'F'}' WHERE id = {user_id};")
-                bot.send_message(user_id, f"Explore settings updated.", reply_markup = markup.explore_settings_menu)
-            else:
-                bot.send_message(user_id, f"Explore settings are not updated.", reply_markup = markup.explore_settings_menu)
-
-            cursor.execute(f"UPDATE users SET mode_text = 'explore_settings', mode_num = 0 WHERE id = {user_id};")
-            send_explore_settings(cursor, get_explore_settings(cursor, user_id), user_id)
+        # here must be block from txt/examples.txt file
 
         elif message.text == 'Back to main menu':
             back_to_main_menu(cursor, user, message)

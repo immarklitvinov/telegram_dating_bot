@@ -51,7 +51,8 @@ edit_profile.add(item1_main)
 
 explore_menu = types.ReplyKeyboardMarkup(resize_keyboard = True)
 item1_explore_menu = types.KeyboardButton('Explore new')
-item2_explore_menu = types.KeyboardButton('Search filters (VIP only)')
+#item2_explore_menu = types.KeyboardButton('Search filters (comings_soon)')
+item2_explore_menu = types.KeyboardButton('Clear explore history')
 explore_menu.add(item1_explore_menu, item2_explore_menu, item1_back_to_main)
 
 explore_menu_vip = types.ReplyKeyboardMarkup(resize_keyboard = True)
