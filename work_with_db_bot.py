@@ -46,6 +46,19 @@ def reply(message):
     connection.commit()
     connection.close()
 
+@bot.message_handler(commands=['info'])
+def reply(message):
+    connection = sqlite3.connect('people.db')
+    connection.row_factory = row_factory_func
+    cursor = connection.cursor()
+
+    ans_arr1 = cursor.execute(f"SELECT id FROM users ORDER BY id").fetchall()
+    ans_arr0 = cursor.execute(f"SELECT id FROM users WHERE profile_created == 1").fetchall()
+    bot.send_message(message.chat.id, f"Registered accounts: {len(ans_arr0)}\n\nTotal amount: {len(ans_arr1)}")
+
+    connection.commit()
+    connection.close()
+
 @bot.message_handler(commands=['all_id'])
 def reply(message):
     connection = sqlite3.connect('people.db')
@@ -79,7 +92,10 @@ def reply(message):
     if message.text[5:].isnumeric():
         if int(message.text[5:]) in cursor.execute(f"SELECT id FROM users").fetchall():
             user = get_profile(cursor, int(message.text[5:]))
-            send_profile(403500796, user)
+            try:
+                send_profile(403500796, user)
+            except FileNotFoundError:
+                bot.send_message(403500796, 'User unregistered.')
         else:
             bot.send_message(message.chat.id, 'Strange command')
     else:

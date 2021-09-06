@@ -96,10 +96,13 @@ def send_my_profile(chat_id, user):
     caption_generated = f"{user['name']}, {user['age']}, {user['city']}\n\n{user['description']}\n\nInterests: {', '.join(user['interests'].split()) + '.'}"
     bot.send_photo(chat_id, open(f"images/{'fe' * int(user['sex'] != 'M')}male/{user['id']}.jpg", 'rb'), caption = caption_generated)
 
-def send_profile(chat_id, user):
+def send_profile_explore(chat_id, user):
     caption_generated = f"{user['name']}, {user['age']}, {user['city']}\n\n{user['description']}\n\nInterests: {', '.join(user['interests'].split()) + '.'}"
     bot.send_photo(chat_id, open(f"images/{'fe' * int(user['sex'] != 'M')}male/{user['id']}.jpg", 'rb'), caption = caption_generated, reply_markup = markup.explore)
 
+def send_profile(chat_id, user):
+    caption_generated = f"{user['name']}, {user['age']}, {user['city']}\n\n{user['description']}\n\nInterests: {', '.join(user['interests'].split()) + '.'}"
+    bot.send_photo(chat_id, open(f"images/{'fe' * int(user['sex'] != 'M')}male/{user['id']}.jpg", 'rb'), caption = caption_generated)
 
 # most important function to get user data from db
 def get_profile(cursor, user_id):
@@ -126,10 +129,14 @@ def create_query(user_id, cursor, settings, user): # with filters
     #if(settings['account_status'] == 'vip'):
     #    new_query = cursor.execute(f"SELECT id FROM users WHERE id != {user_id} AND age >= {settings['age_min']} AND age <= {settings['age_max']} AND sex == '{settings['sex_required']}' AND interests LIKE '%{settings['interest_required']}%'").fetchall()
     #else:
-    seen_str = f"({settings['seen_profiles'][1:-1]})"
+    seen_set = ats(list(set(sta(settings['seen_profiles']))))
+    cursor.execute(f"UPDATE explore_settings SET seen_profiles = '{seen_set}' WHERE id == {user_id}")
+    seen_str = f"({seen_set[1:-1]})"
     new_query = cursor.execute(f"SELECT id FROM users WHERE id != {user_id} AND sex != '{user['sex']}' AND id NOT IN {seen_str} AND profile_created == 1").fetchall()
-
+    random.shuffle(new_query)
     cursor.execute(f"UPDATE explore_settings SET query = '{ats(new_query)}', query_length = {len(new_query)} WHERE id = {user_id}")
+
+
 
 def next_profile(cursor, user_id):
     anket_arr = sta(cursor.execute(f"SELECT query FROM explore_settings WHERE id == {user_id}").fetchone())
@@ -193,7 +200,7 @@ def report(cursor, explorer_id, explored_id):
     times_my_profile_shown_old = cursor.execute(f"SELECT times_my_profile_shown FROM explore_settings WHERE id == {explored_id}").fetchone()
     cursor.execute(f"UPDATE explore_settings SET reported_times = {reported_times_old + 1} WHERE id == {explored_id}")
 
-    if((reported_times_old + 1) / (times_my_profile_shown_old + 1) > 0.4 and times_my_profile_shown_old > 9):
+    if((reported_times_old + 1) / (times_my_profile_shown_old + 1) >= 0.3 and times_my_profile_shown_old > 9):
         banned(cursor, explored_id)
 
     bot.send_message(explorer_id, 'You have successfully reported the user.')
@@ -214,9 +221,13 @@ def explore_profiles(cursor, user_id):
 
     if(settings['query_length'] != 0):
         next_profile(cursor, user_id)
-        send_profile(user_id, get_profile(cursor, get_explore_settings(cursor, user_id)['id_current']))
+        send_profile_explore(user_id, get_profile(cursor, get_explore_settings(cursor, user_id)['id_current']))
     else:
         bot.send_message(user_id, 'No more users left to explore.', reply_markup = vip_markup(settings['account_status']))
+
+        likes_to_set = ats(list(set(sta(settings['likes_to']))))
+        cursor.execute(f"UPDATE explore_settings SET likes_to = '{likes_to_set}' WHERE id == {user_id}")
+
         cursor.execute(f"UPDATE users SET mode_text = 'explore_menu' WHERE id = {user_id}")
         cursor.execute(f"UPDATE explore_settings SET id_current = -1 WHERE id = {user_id}")
 
