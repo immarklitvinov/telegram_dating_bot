@@ -1,6 +1,6 @@
 # Telegram dating bot
 
-Created this telegram bot for my friends for them to get in touch with new people.
+Created this telegram bot for my friends to get them in touch with each other.
 
 
 ## Project Files discription:
