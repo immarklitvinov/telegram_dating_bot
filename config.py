@@ -1,1 +1,1 @@
-TOKEN = '1920575408:AAHHz4PpuGnne_5V94X2ybeSKwE4L8Pqu9A'
+TOKEN = 'secret_bot_token'

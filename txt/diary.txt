@@ -1,268 +1,138 @@
-Создание тг бота по времени. 1-ый час:
-
-59 - учусь lambda функциям
-50 - создаю анкету пользователя
-32 - ввожу данные
-9 - немножко разобрался в документации, получил доступ к айдишнику пользователя. Начинаю создавать словарь из юзеров
-1 - получил доступ к найди чата, айдишнику собеседника, научился их ему отправлять
-
-
-Создание тг бота по времени. 2-ой час:
-
-59 - на самом деле он выводил айпишник бота. Получаю айпишник юзера
-36 - возникает какая-то ошибка с SyntaxError с message.from хз вообще жесть
-31 - оказалось что id чата и есть юзерский id лол
-15 - запилил /help и понял, что буду туда пихать
-13 - перенес все сервисы на нос с телефона и айпэда
-
-
-Создание тг бота по времени. 3-ий час:
-
-59 - узнал про инлайновые Клавы к сообщениям
-37 - сделал первую менюшку с инлайновыми кнопками
-30 - пытаюсь удалить клавиатуру
-1 - внимательно прочитал документацию и удалил
-
-
-Создание тг бота по времени. 4-ый час:
-
-59 - Игнат сказал удобнее пользоваться Клавой с Клавы, а не инлайновыми историями. Буду сейчас делать клаву получается
-59 - начинаю разработку создания анкет
-0 - придумал, как сделать весь процесс, начинаю ввод города
-
-
-Создание тг бота по времени. 5-ый час:
-
-59 - создаю анкету
-48 - добавил имя
-40 - начинаю добавлять интересы
-18 - составил список по интересам. пошалил его. вылил историю в инст
-11 - закоммитил с началом создания списка интересов
-1 - разбираюсь с тем, как нормально сделать клаву
-
-
-Создание тг бота по времени. 6-ый час:
-
-59 - начал делать
-47 - клавиатура по интересам начала работать.  Осталось ее доделать, чтобы обновлялась
-23 - тщетно пытаюсь ее обновлять
-14 - сделал-таки интерактивную клаву. ЕЕееее
-1 - добавил описание профилей, перехожу к добавлению фоток. это самое загадочное пока что. как работать с фотками в тг ботах. где их хранить и тп
-
-
-Создание тг бота по времени. 7-ый час:
-
-59 - начал разбираться как тут с фотками быть
-34 - вроде нашел на stack как делать, только пока не работает
-6 - скачал-таки фотки, запихну их в папки male и female - про них, кстати, забыл, сейчас как раз их добавлю
-
-
-Создание тг бота по времени. 8-ой час:
-
-59 - доделываю создание анкет в словарь
-35 - навел красоту, сделал отдельные папки, сделал удобную менюшку с кнопкой, чтоб вернуться в главное меню
-0 - полностью сделал создание анкет. ыы класс. сейчас закомиччу и проверю с Игнатом
-
-
-Создание тг бота по времени. 9-ый час:
-
-59 - написал Гошану за советом, сейчас причешу бота, пока он отвечает по поводу бд. Надо допилить остальной функционал и блогику.
-0 - пилю функционал, чтобы все нормально работало, улучшения и багофиксы по типу обновления панельки ввода, вывода полностью анкеты перед началом ее публикации, переходы.
-
-
-Создание тг бота по времени. 10-ый час:
-
-Смог вывести полностью анкету с фотографией и полным описанием, улучшил работу кнопок, сейчас все очень плавно и хорошо работает.
-Осталось сделать 3 вещи: db, explore page & editing page.
-
-
-Создание тг бота по времени. 11-ый час:
-
-59 - начинаю фикс бага от Гоши
-30 - пофиксил баг от Гошана и нашел новый очень сильный и крутой - бот одновременно запускается один, и все его переменные - общие для всех юзеров
-30 - начинаю немного переделывать структуру бота, потому что нашел баг
-6 - начал писать class teleuser чтобы их адекватно хранить
-
-
-Создание тг бота по времени. 12-ый час:
-
-27 - отредактировал первый кусок кода. переписываю почти весь код  меняю
-1 - переписал большую часть своего говнокода
-
-
-Создание тг бота по времени. 13-ый час:
-
-47 - переписал весь оставшийся код. сейчас запущу и буду багофиксить, надеюсь немного
-18 - все пофиксил, все четко работает. Есть только один баг: когда диалог начинается не со /start бот вылетает
-0 - почитал чатик пми и немного передохнул. закомиттил апдейт
-
-
-Создание тг бота по времени. 14-ый час:
-
-59 - начал делать дб / загрузку в файл, после этого апдейт
-0 - начал погружаться в тему бд и че это такое офигеть.
-
-
-Создание тг бота по времени 15-ый час:
-
-59 - прохожу туториал по sqlite3
-20 - открыл документацию и быстро все осознал. щя делаю тестовый код и уже начинаю быстренько делать бд для бота
-0 - сделал тестовый код и все понял, начинаю делать дб под бота.
-
-
-Создание тг бота по времени. 16-ый час:
-
-59 - делаю бд для своего бота
-22 - научился посылать запросы и норм работать с данными
-7 - начинаю переписывать код снова
-0 - офигел от tuple в sql блиииин надо заморочиться чуток
-
-
-Создание тг бота по времени. 17-ый час:
-
-59 - нашел на стаке как решить проблему с тёплами клаааас все будет легче и лучше
-25 - пофиксил пару багов, новая проблема - не выводит всю строку из базы целиком мм
-7 - убрал багу с неправильной записью в бд
-0 - не убрал(())
-
-
-Создание тг бота по времени. 18-ый час:
-
-59 - пытаюсь понять где у меня фигня
-41 - в каком-то месте багует, не могу найти(
-22 - нашел и разобрался. все дело было в том же выводе с row отвечает за это штука row_factory я написал там свою функцию и надеюсь она четко работает
-6 - додумался переделывать row в словарь чтобы было проще надеюь будет проще
-0 - переделываю код
-
-
-Создание тг бота по времени. 19-ый час:
-
-59 - переделываю код с учетом запросов к бд
-29 - ловлю баги в самом трудном месте get data method cerf
-10 - пофиксил! оказалось я когда копипастил там менял метод row_factory сам того не зная теперь работает
-9 - начинаю переписывать сложное место с интересами и дб
--20 - переписал, щя буду багофиксить
-
-
-Создание тг бота по времени 20-ый час:
-
-59 - запускаю после багофиксов
-30 - исправил все багофиксы, осталось только с фотками разобраться, он чето тупит
-19 - разобрался с фотками, проблема была в пропущенной запятой в одном месте хехе. щя буду разбираться с вариантами клавы, чтобы каждому юзеру норм клавы были в ответ
-4 - разобрался с менюшкой edit / create
-0 - разобрался с менюшкой interests
-0 - багофикс
--10 - сделал, все переделано, наконец-то, прекрасно!! Комиччу и на сегодня еще часик посижу, попробую сделать edit чтоб потом не возиться с этим делом
-
-
-Создание тг бота по времени. 21-ый час:
-
-59 - начинаю делать profile edit
-12 - продумал структуру и начал редактировать, сделал редактирование имени
-1 - делаю if'ы
-
-
-Создание тг бота по времени 22-ой час:
-
-59 - пишу условные конструкции для редактирования профиля
-40 - норм написал, только для чисел фоток и интересов отдельно, поехали фиксить это
-2 - сделал обновление пола юху сейчас возраст
-
-
-Создание тг бота по времени 23-ий час:
-
-28 - it is only left to debug my changes panel
-2 - looking for buggs connected with wrong indexation fo arrays lmao
-
-
-Creating tgbot by time. 24th hour:
-
-20 - I have debugged the code, now making everything nice
-0 - debugged, sent current version to Mathew and George, they said it's okay.
-
-
-Creating tgbot by time. 25th hour:
-
-59 - from that time I begin to create explore page and the whole system of finding people
-55 - inventing vip-features
-25 - came up with idea of searching people with their location - it's genious!!
-
-
-Creating tgbot by time. 26th hour:
-
-46 - beginning the creation of explore page
-40 - commited latest version before creation of explore page
-40 - derived a formula of distance between two points on sphere
-0 - created 10 users
-
-
-Creating tgbot by time. 27th hour:
-
-40 - fixed bugs from previous markup update and now creating new 10 profiles and making basic explore
-1 - profiles created successfully. now making query and basic search
-
-
-Creating tgbot by time. 27th hour:
-
-16 - counting the proper size of query
-2 - math is done, now back to practice
-
-
-Creating tgbot by time. 28th hour:
-
-58 - creating explore markup
-0 - created markup and debuged
-
-
-Creating tgbot by time.
-
-0 - packing explore buttons into one and only container
-16 - creating query
-1:07 - invented the whole struct of db
-1:58 - found out that there's json library in python and it's not a problem at all now to have query storaged
-2:39 - created all necessary fields for my database: table explore_settings and additional columns in users
-3:13 - adding info to old and new db works, now I commit changes and end up for today. feels like im closer
-6:20 - I debugged the fucking bug connected with import problem. Lost day, though I now know how to create query without filters
-6:20 - creating query without any search filters
-7 - created easiest query create function
-7 - creating structure of likes
-7:47 - wrote the logic, it's only left to wright functions
-8 - restructuring my databases, starting to code those functions
-8:45 - database updated
-9:50 - created like() next_profile() and profile_seen() functions.
-10:20 - debugging
-10:35 - debugged like() and next_profile() and profile_seen().
-10:35 - creating anon_like() and editing db
-10:45 - created anon_like(). Can't wait to debug and test!!!!!
-10:45 - started to debug anon_like()
-11:00 - anon_like() successfully debugged
-11:00 - created dislike() function, deleted function of love_letter
-
-raise ReadTimeout(e, request=request)
-requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=25)
-
-In the end I will have to fix this shit above via connecting webhook.
-
-11:00 - creating report(user) function
-12:00 - created block() and report() functions
-12:00 - debugging reporting(), debug reported
-12:00 - editing create_query() function
-13:00 - creating vip(id) function -> explore_settings edition -> create_query editing
-14:00 - beginning the creation of explore_settings edition, vip(cursor, id) is already created
-14:00 creating editing of explore_settings
-15:00 - still creating editing of explore_settings
-16:06 - still creating editing of explore_settings
-17:00 - posted instastory, @danav found bug connected with settings. now need to edit this part. and debug interests_arr
-17:01 - fixing bugs found
-17:59 - building the whole platform again
-18:00 - system successfully updated
-19:00 - all bugs connected with system successfully fixed
-19:01 - now modifying create_query() and the plan is explore_settings edition -> create_query() editing -> stripe-payments -> install webhook -> debug +- multibotsystem -> heroku server and done.
-19:30 - added edition of sex_required; continuing editing of create_query()
-20:00 - exploring how WHERE parameters work
-20:01 - create_query() successfully edited, only SEEN and CITY are not trivial. now debugging
-20:20 - I noticed the bug when vip user has not yet created all the settings but create query thinks he's vip and it will raise error
+Creating dating bot
+
+0:01 - learning lambda-functions
+0:10 - inventing account view
+0:28 - inserting data
+0:51 - exploring library documentation to implement some features
+0:59 - got access to chat_id, user_id, learnt to send messages
+1:01 - fixing issues
+1:24 - fixing unknown SyntaxError issue
+1:29 - turns out chat_id and user_id are different
+1:45 - created /help command and realised what to do with it
+2:01 - explored about inline keyboards inside telegram
+2:23 - created first inline menu
+2:30 - trying to delete it
+2:59 - read all the docs and deleted it
+3:01 - making pivot to keyboard input instead of inline as it is more comfort
+3:01 - creating the whole process
+3:45 - the whole model is configured
+4:01 - creating profiles
+4:12 - created name field
+4:20 - creating interests field
+4:40 - created set of interests
+4:49 - made a commit with beginning of interest field
+4:59 - making keyboard input work
+5:01 - began to create keyboard for interests
+5:13 - keyboard for interests created, now trying to update it
+5:37 - still trying to update
+5:46 - successfully done it
+5:59 - created profile description, now turning to photo addition. for now i dont know but ill deal
+6:01 - creating a plan what to do with photos
+6:26 - stack answers dont work
+6:54 - downloaded photos, added them to male и female folders
+7:01 - turning account creating into dictionary
+7:25 - made it look nice, created cool menu with buttons needed to go back to main menu
+8:00 - creating of ankets is done. yay. now committing and debugging
+9:01 - asked my friend a piece of advice about db, now make it look good, make logic correct
+10:00 - huge debugging all micro processes, code
+
+Learnt to send the whole profile with photo and description, upgraded work of buttons, now it works good.
+Now: db, explore page & editing page.
+
+10:01 - начинаю фикс бага от Гоши
+10:30 - invented the plan for restructuring the code: it becomes too complex
+10:54 - created class teleuser to store the data
+11:33 - rewriting almost the whole code
+11:59 - almost rewrited the whole code
+12:13 - rewrited, how going to fix all the bugs
+12:42 - fixed all inspite of one: issue when the dialog starts not with begin button
+13:00 - committed changes
+13:01 - started creating database, then - update
+14:00 - exploring SQL and the whole db structure
+14:01 - doing tutorial on sqlite3
+14:40 - scanned docs and soon starting bot's db, now writing 'helloworld' in sql
+15:00 - understood sql and turn to my bot
+15:34 - worked out how to write sql-requests and work with data
+15:53 - cause lack of experience rewriting the data storage from dicts to sql-db
+16:00 - invented using python list() in db to store sequences in one cell
+16:01 - discovered on stack how to properly use list()
+16:35 - fixed two big bugs, now one new appeared
+16:53 - fixed the last
+17:00 - did not fix ((
+17:19 - cannot find the place with bug
+17:38 - after exploring stack realised the issue was inside sql structure / system. changed it parameters
+17:54 - guessed to work with json object to make life easier
+18:00 - rewriting the code
+18:30 - get bugs in the worst place for me
+18:50 - fixed! my bad with changing the sql settings
+1 extra hour: rewriting interest-structure with db objects
+19:00 - running after bug fixes
+19:30 - works good but fails to upload photos
+19:41 - the problem was only with one comma, now good
+20:00 - dealt with menus, fixed little bugs
+20:01 - creating profile edit settings
+20:48 - thought through the structure. after triple rewriting i started to do that
+20:59 - writing if' clauses
+21:20 - done, now special if's for special types of data
+21:58 - created updating of sex, now interests
+22:32 - it is only left to debug my changes panel
+22:58 - looking for bugs connected with wrong indexation of arrays
+23:40 - i have debugged the code, now making everything nice
+24:00 - debugged, sent current version to Mathew and George, they said it's okay.
+24:01 - from that time I begin to create explore page and the whole system of finding people
+24:05 - inventing vip-features
+24:30 - came up with idea of searching people with their location - it's genious!!
+25:14 - beginning the creation of explore page
+25:20 - commited latest version before creation of explore page
+25:30 - derived a formula of distance between two points on sphere
+26:00 - created 10 users
+26:20 - fixed bugs from previous markup update and now creating new 10 profiles and making basic explore
+26:59 - profiles created successfully. now making query and basic search
+27:44 - counting the proper size of query
+27:58 - math is done, now back to practice
+28:02 - creating explore markup
+29:00 - created markup and debuged
+30: - packing explore buttons into one and only container
+30:16 - creating query
+31:07 - invented the whole struct of db
+31:58 - found out that there's json library in python and it's not a problem at all now to have query storaged
+32:39 - created all necessary fields for my database: table explore_settings and additional columns in users
+33:13 - adding info to old and new db works, now I commit changes and end up for today. feels like im closer
+36:20 - I debugged the bug connected with import problem. Lost day, though I now know how to create query without filters
+36:20 - creating query without any search filters
+37:00 - created easiest query create function
+37:27 - creating structure of likes
+37:47 - wrote the logic, it's only left to wright functions
+38:00 - restructuring my databases, starting to code those functions
+38:45 - database updated
+39:50 - created like() next_profile() and profile_seen() functions.
+40:20 - debugging
+40:35 - debugged like() and next_profile() and profile_seen().
+40:35 - creating anon_like() and editing db
+40:45 - created anon_like(). Can't wait to debug and test!!!!!
+40:45 - started to debug anon_like()
+41:00 - anon_like() successfully debugged
+41:00 - created dislike() function, deleted function of love_letter
+41:30 - creating report(user) function
+42:00 - created block() and report() functions
+42:00 - debugging reporting(), debug reported
+42:00 - editing create_query() function
+43:00 - creating vip(id) function -> explore_settings edition -> create_query editing
+44:00 - beginning the creation of explore_settings edition, vip(cursor, id) is already created
+44:00 creating editing of explore_settings
+45:00 - still creating editing of explore_settings
+46:06 - still creating editing of explore_settings
+47:00 - posted instastory, @danav found bug connected with settings. now need to edit this part. and debug interests_arr
+47:01 - fixing bugs found
+47:59 - building the whole platform again
+48:00 - system successfully updated
+49:00 - all bugs connected with system successfully fixed
+49:01 - now modifying create_query() and the plan is explore_settings edition -> create_query() editing -> stripe-payments -> install webhook -> debug +- multibotsystem -> heroku server and done.
+49:30 - added edition of sex_required; continuing editing of create_query()
+50:00 - exploring how WHERE parameters work
+50:01 - create_query() successfully edited, only SEEN and CITY are not trivial. now debugging
+50:20 - I noticed the bug when vip user has not yet created all the settings but create query thinks he's vip and it will raise error
 also i faced the problem that my create_query() params don't work.
-20:50 - it was really strange but I changed nothing and it now works.
-21:00 - now i know i can use NOT in SELECT. problems for now are bugged vip create query and city in select. Their fixes: users + explore_settings / get acces to another db or append seen to users AND string.format()
-22:00 - seen debuged!!!!!!!!!!!!!!!!!!!!!!!! Only vip wtf left to be edited, as city in select and create vip query - are connected with vip accounts
+50:50 - it was really strange but I changed nothing and it now works.
+51:00 - now i know i can use NOT in SELECT. problems for now are bugged vip create query and city in select. Their fixes: users + explore_settings / get acces to another db or append seen to users AND string.format()
+52:00 - seen debuged!!!!!!!!!!!!!!!!!!!!!!!! Only vip left to be edited, as city in select and create vip query - are connected with vip accounts

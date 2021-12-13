@@ -1,4 +1,5 @@
-code examples
+code examples   # this is some code from future version,
+                # but it is not going to update.
 
 s = '''
     elif 'Search filters' in message.text and user['mode_text'] == 'explore_menu':

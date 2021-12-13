@@ -1,6 +1,0 @@
-Name: Meetmeet_bot
-Description: This is a place to meet your second half, to get in touch with new friends or just relax.
-About: Meet new people👋
-
-start - Runs the dialog
-help - Shares info about bot
